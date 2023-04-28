@@ -1,57 +1,61 @@
-# Project Name
-
-(short, 1-3 sentenced, description of the project)
-
-## Features
-
-This project framework provides the following features:
-
-* Feature 1
-* Feature 2
-* ...
-
+# Azure Government OpenAI Access
+<ARCHITECUTRE HERE>
 ## Getting Started
+This quickstart example uses Azure CLI to deploy an isolated Docker container to Azure Container Instances in Azure Government based on code used in the [Azure OpenAI quickstart guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?pivots=programming-language-python&tabs=command-line). This app will directly connect over the Microsoft’s private and secure backbone network (never connecting to the internet) as noted in Figure 1 below and accessing your deployed Azure OpenAI service within Azure Commercial. 
 
 ### Prerequisites
+-	All prerequisites from [Azure OpenAI quickstart guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?pivots=programming-language-python&tabs=command-line).
+-	Use the Bash environment in [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/overview) within Azure Government. For more information, see [Quickstart for Bash in Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/quickstart).
+- Knowledge of Docker CLI operations (e.g. tagging, creating images)
 
-(ideally very short, if any)
+### Create a resource group
+Azure container instances, like all Azure resources, must be deployed into a resource group. Resource groups allow you to organize and manage related Azure resources.
 
-- OS
-- Library version
-- ...
+First, create a resource group named `myResourceGroup` in the `usgovvirginia` location with the following az group create command:
 
-### Installation
+```
+az group create --name myResourceGroup --location usgovvirginia
+```
 
-(ideally very short)
+### Create an Azure Container Registry and Log in to registry
 
-- npm install [package name]
-- mvn install
-- ...
+- [Create Azure Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli#create-a-container-registry)
+- [Log in to Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli#create-a-container-registry)
 
-### Quickstart
-(Add steps to get up and running quickly)
+### Tag and push container image 
 
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+```
+az acr create --resource-group myResourceGroup \
+  --name mycontainerregistry --sku Basic
+az acr login --name mycontainerregistry
+docker build agoa mycontainerregistry/agoa:v1
+docker push mycontainerregistry/agoa:v1
+```
 
+### Set Azure OpenAI Environment Variables
+Azure container instances can take in environment variables at runtime, which are used within the Python container app.
 
-## Demo
+```
+$OPENAI_API_BASE=”REPLACE_WITH_YOUR_ENDPOINT_HERE”
+$OPENAI_API_KEY=”REPLACE_WITH_YOUR_API_KEY_HERE”
+```
 
-A demo app is included to show how to use the project.
+### Create a container
+Now that you have a resource group, you can run a container in Azure. To create a container instance with the Azure CLI, provide a resource group name, container instance name, and Docker container image to the az container create command.
 
-To run the demo, follow these steps:
+```
+az container create --resource-group myResourceGroup \
+  --name agoa-container-group \
+  --environment-variables ‘OPENAI_API_BASE=$OPENAI_API_BASE, OPENAI_API_KEY=$OPENAI_API_KEY’ \
+  --image mycontainerregistry/agoa:v1/agoa:v1 \
+  agoa
+```
 
-(Add steps to start up the demo)
+### Verify via container logs
+Now that you have your container deployed, let’s check the logs to verify connectivity.
 
-1.
-2.
-3.
+```
+az container logs --resource-group myResourceGroup --name agoa
+```
 
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+<SAMPLE OUTPUT>
