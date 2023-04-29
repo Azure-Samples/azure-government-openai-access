@@ -45,8 +45,8 @@ docker push mycontainerregistry/agoa:v1
 Azure container instances can take in environment variables at runtime, which are used within the Python container app.
 
 ```
-$OPENAI_API_BASE=”REPLACE_WITH_YOUR_ENDPOINT_HERE”
-$OPENAI_API_KEY=”REPLACE_WITH_YOUR_API_KEY_HERE”
+$export OPENAI_API_BASE=”REPLACE_WITH_YOUR_ENDPOINT_HERE”
+$ export OPENAI_API_KEY=”REPLACE_WITH_YOUR_API_KEY_HERE”
 ```
 
 ### Create a container
