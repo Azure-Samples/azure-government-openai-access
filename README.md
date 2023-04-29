@@ -8,6 +8,15 @@ This quickstart example uses Azure CLI to deploy an isolated Docker container to
 -	Use the Bash environment in [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/overview) within Azure Government. For more information, see [Quickstart for Bash in Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/quickstart).
 - Knowledge of Docker CLI operations (e.g. tagging, creating images)
 
+
+### Setting Cloud
+
+To deploy in Azure Gov please set the cloud as Follows
+
+```
+az cloud set --name AzureUSGovernment 
+```
+
 ### Create a resource group
 Azure container instances, like all Azure resources, must be deployed into a resource group. Resource groups allow you to organize and manage related Azure resources.
 
