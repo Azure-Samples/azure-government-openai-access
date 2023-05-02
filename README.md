@@ -1,6 +1,7 @@
 # Azure Government OpenAI Access
 <ARCHITECUTRE HERE>
-## Getting Started
+
+### Getting Started
 This quickstart example uses Azure CLI to deploy an isolated Docker container to Azure Container Instances in Azure Government based on code used in the [Azure OpenAI quickstart guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?pivots=programming-language-python&tabs=command-line). This app will directly connect over the Microsoft’s private and secure backbone network (never connecting to the internet) as noted in Figure 1 below and accessing your deployed Azure OpenAI service within Azure Commercial. 
 
 ### Prerequisites
