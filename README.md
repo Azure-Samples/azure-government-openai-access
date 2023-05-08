@@ -1,14 +1,17 @@
 # Azure Government OpenAI Access
-<ARCHITECUTRE HERE>
+
+![](arch.png)
 
 ### Getting Started
-This quickstart example uses Azure CLI to deploy an isolated Docker container to Azure Container Instances in Azure Government based on code used in the [Azure OpenAI quickstart guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?pivots=programming-language-python&tabs=command-line). This app will directly connect over the Microsoft’s private and secure backbone network (never connecting to the internet) as noted in Figure 1 below and accessing your deployed Azure OpenAI service within Azure Commercial. 
+This quickstart example uses Azure CLI to deploy a Docker container to Azure Container Instances in Azure Government based on code used in the [Azure OpenAI quickstart guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?pivots=programming-language-python&tabs=command-line). This app demonstrates access to Azure OpenAI instance (which is a prerequisite) from an Azure Government subscription, directly connecting over the Microsoft’s private and secure backbone network (never connecting to the internet) as shown in architecture above.
 
 ### Prerequisites
--	All prerequisites from [Azure OpenAI quickstart guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart?pivots=programming-language-python&tabs=command-line).
--	Use the Bash environment in [Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/overview) within Azure Government. For more information, see [Quickstart for Bash in Azure Cloud Shell](https://learn.microsoft.com/en-us/azure/cloud-shell/quickstart).
+- Access granted to Azure OpenAI in the desired Azure subscription. Currently, access to this service is granted only by application. You can apply for access to Azure OpenAI by completing the form at [https://aka.ms/oai/access](https://aka.ms/oai/access). Open an issue on this repo to contact us if you have an issue.
+- An Azure OpenAI Service resource with a model deployed. For more information about model deployment, see the [resource deployment guide](https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/create-resource).
+- [Python 3.7.1 or later version](https://www.python.org/) with following Python libaries: os, requests, json
+- Azure CLI. For more information, see [How to install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
+After installing, sign in for the first time. For more information, see [How to sign into the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/get-started-with-azure-cli#how-to-sign-into-the-azure-cli).
 - Knowledge of Docker CLI operations (e.g. tagging, creating images)
-
 
 ### Setting Cloud
 
@@ -37,6 +40,7 @@ az group create --name myResourceGroup --location usgovvirginia
 ```
 az acr create --resource-group myResourceGroup \
   --name mycontainerregistry --sku Basic
+
 az acr login --name mycontainerregistry
 docker build agoa mycontainerregistry/agoa:v1
 docker push mycontainerregistry/agoa:v1
@@ -46,8 +50,8 @@ docker push mycontainerregistry/agoa:v1
 Azure container instances can take in environment variables at runtime, which are used within the Python container app.
 
 ```
-$export OPENAI_API_BASE=”REPLACE_WITH_YOUR_ENDPOINT_HERE”
-$ export OPENAI_API_KEY=”REPLACE_WITH_YOUR_API_KEY_HERE”
+echo export AZURE_OPENAI_KEY="REPLACE_WITH_YOUR_KEY_VALUE_HERE" >> /etc/environment && source /etc/environment
+echo export AZURE_OPENAI_ENDPOINT="REPLACE_WITH_YOUR_ENDPOINT_HERE" >> /etc/environment && source /etc/environment
 ```
 
 ### Create a container
@@ -56,7 +60,7 @@ Now that you have a resource group, you can run a container in Azure. To create 
 ```
 az container create --resource-group myResourceGroup \
   --name agoa-container-group \
-  --environment-variables ‘OPENAI_API_BASE=$OPENAI_API_BASE, OPENAI_API_KEY=$OPENAI_API_KEY’ \
+  --environment-variables ‘OPENAI_API_BASE=$AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY=$AZURE_OPENAI_KEY’ \
   --image mycontainerregistry/agoa:v1/agoa:v1 \
   agoa
 ```
