@@ -71,7 +71,7 @@ export AZURE_CONTAINER_REGISTRY_PWD="REPLACE_WITH_YOUR_ACR_PASSWORD"
 
 ### Build the image and test on your local machine
 
-Run these commands in the cloned version of this repository directory.
+Run these commands in the root folder of the cloned version of this repository directory.
 
 For Windows:
 
