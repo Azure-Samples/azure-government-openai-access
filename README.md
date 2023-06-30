@@ -90,7 +90,7 @@ docker run  -e OPENAI_API_BASE=$AZURE_OPENAI_ENDPOINT -e OPENAI_API_KEY=$AZURE_O
 Once you have successfully tested locally push the container to the Azure Container Registry created above:
 
 ```bash
-docker push docker push mycontaineregistry.azurecr.us/agoa:v1
+docker push mycontaineregistry.azurecr.us/agoa:v1
 ```
 
 ### Create a container
